@@ -1,0 +1,20 @@
+name: flybrain
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pip
+  - numpy=1.26.4
+  - scipy
+  - pandas
+  - pyarrow
+  - joblib
+  - tqdm
+  - matplotlib
+  - jupyter
+  - ipykernel
+  - pytest
+  - pip:
+    - --extra-index-url https://download.pytorch.org/whl/cu126
+    - brian2
+    - torch==2.14.1+cu126
