@@ -32,3 +32,20 @@ Brian2 CPU 2.90 s, PyTorch 9.79 s, Brian2CUDA 11.96 s.
 ## Labels
 - [SIMPLIFICATION] all neurons share the same LIF parameters; one global weight scale.
 - [HYPOTHESIS] GeNN would run near real time on this GPU; to be measured.
+
+## GeNN attempt (2026-10-18)
+- Environment: Ubuntu 26.04.1 (glibc 2.43, system gcc 15). CUDA 12.6.3 toolkit installed
+  from NVIDIA's WSL-Ubuntu apt repo (cuda-compiler-12-6 + cuda-libraries-dev-12-6, about 8 GB
+  on disk) with g++-13 as the nvcc host compiler.
+- nvcc failed on glibc >= 2.41 (cospi/sinpi/rsqrt "exception specification is incompatible"
+  in crt/math_functions.h). Workaround: added `noexcept (true)` to 6 declarations in that
+  header (backup kept as math_functions.h.orig). Test kernel compiled and ran.
+- PyGeNN 5.4.0 built from source with gcc-13; the GeNN model code compiled.
+- Loading the model failed with CUDA out of memory (free VRAM 4.95 GiB).
+- Likely cause (estimate, not verified in GeNN): the SPARSE format used by the Eon runner
+  pads every row to the longest one. Max out-degree is 9,783, so about
+  138,639 x 9,783 x 8 B = 10.1 GiB, against 15.1 M real connections (about 0.12 GB).
+- Not tried: splitting neurons into degree classes with separate synapse groups; a larger GPU.
+- Status: Brian2 CPU stays the reference and working engine.
+- Open question: closed loop with the body needs control every ~15 ms; standalone Brian2
+  runs the whole simulation at once. Runtime-mode speed is to be measured.
