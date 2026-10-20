@@ -18,3 +18,4 @@ dependencies:
     - --extra-index-url https://download.pytorch.org/whl/cu126
     - brian2
     - torch==2.14.1+cu126
+    - flygym==1.1.0
