@@ -49,3 +49,20 @@ Brian2 CPU 2.90 s, PyTorch 9.79 s, Brian2CUDA 11.96 s.
 - Status: Brian2 CPU stays the reference and working engine.
 - Open question: closed loop with the body needs control every ~15 ms; standalone Brian2
   runs the whole simulation at once. Runtime-mode speed is to be measured.
+
+## Brian2 runtime mode, closed-loop stepping (2026-10-20)
+Question: can a brain-body loop step the model every 15 ms without a huge cost?
+- Repeated `net.run(window)` calls (scripts/measure_brian2_runtime.py): median wall time
+  per window 0.1 ms: 170.5 ms, 1 ms: 172.2 ms, 15 ms: 215 ms (306 ms in an earlier run),
+  60 ms: 322 ms, 150 ms: 610 ms. Fixed overhead of about 170 ms per `run()` call
+  (cause not investigated), plus about 3 ms of wall time per simulated ms.
+- One long `net.run()` with a `network_operation` hook every 15 ms
+  (scripts/measure_brian2_netop.py): median 37.3 ms per window (p95 45.4 ms), realtime
+  ratio 0.40x, peak RSS 2.9 GiB. Hook calls: 200 of 200. Switching the stimulus off in
+  mid-run works (spikes per window: 253.8 on, 0.0 off).
+- Run-to-run variation is about 30%. The hook is empty: the body step and the cost of
+  reading spikes of selected neurons are not included yet.
+- [SIMPLIFICATION] The model has no spontaneous activity: without input it is silent.
+- [SIMPLIFICATION] Sensory input is a PoissonGroup with changeable rates instead of
+  PoissonInput (same spike weight, different noise mechanism).
+- Decision proposed: Brian2 runtime + network_operation as the engine for stages 2-3.
