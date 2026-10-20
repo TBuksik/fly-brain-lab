@@ -58,12 +58,12 @@ def main():
     window = args.window_ms * ms
     switch = args.windows // 2
     times, spikes, prev = [], [], 0
-    for w in range(args.windows):
-        if w == switch:
+    for win_idx in range(args.windows):
+        if win_idx == switch:
             pg.rates = 0 * Hz  # live input change: stimulus off
-        t = time.perf_counter()
+        t_win = time.perf_counter()
         net.run(window)
-        times.append(time.perf_counter() - t)
+        times.append(time.perf_counter() - t_win)
         n = spk_mon.num_spikes
         spikes.append(n - prev)
         prev = n
