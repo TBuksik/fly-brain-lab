@@ -81,3 +81,17 @@ scripts/measure_body_step.py: Fly with contact sensors on Tibia and Tarsus1-5 of
 - Displacement over 1.5 s (units not verified, seed 0, one run each): action [1, 1]:
   (21.1, 3.9, -0.1); action [1, 0.2]: (-2.6, -4.1, 0.0). Heading was not measured, so
   turning is not yet demonstrated.
+
+## FlyGym body: turning response (2026-10-23)
+
+Measured with `scripts/measure_turning_curve.py` (HybridTurningController, seed 0,
+1.5 s per action, heading unwrapped, rate taken after 0.5 s). Raw data: `docs/turning-curve.csv`.
+
+- Deterministic: repeated actions reproduce all values exactly (single seed only).
+- Lowering a[1] gives negative heading change, lowering a[0] positive.
+  Which side each index drives is NOT yet verified in the FlyGym source.
+- For x in [0.2, 1.0] the turn rate is roughly 200 deg/s per unit of (1 - x),
+  with a constant bias of about +4.7 deg/s at [1, 1].
+- x = 0 behaves differently and asymmetrically (regime change, cause unknown);
+  keep actions within [0.2, 1.0].
+- This characterises the simulated body only; it is not biological data.
