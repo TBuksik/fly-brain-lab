@@ -66,3 +66,18 @@ Question: can a brain-body loop step the model every 15 ms without a huge cost?
 - [SIMPLIFICATION] Sensory input is a PoissonGroup with changeable rates instead of
   PoissonInput (same spike weight, different noise mechanism).
 - Decision proposed: Brian2 runtime + network_operation as the engine for stages 2-3.
+
+## Body (FlyGym 1.1.0) stepping, headless (2026-10-22)
+scripts/measure_body_step.py: Fly with contact sensors on Tibia and Tarsus1-5 of all legs
+(HybridTurningController needs Tibia/Tarsus1/Tarsus2), adhesion on, no rendering.
+- 150 physics steps (0.1 ms each) per 15 ms window: median 244 ms (p95 296 ms),
+  about 1.6 ms per step, realtime ratio 0.061x. Peak RSS about 0.8 GiB.
+- With the brain (37 ms per window, measure_brian2_netop.py) the sum is about 281 ms per
+  15 ms window (about 0.053x, 10 s of behaviour takes about 3 min). The two parts were
+  measured separately, not in one loop. The body is about 87% of the time.
+- Action is a 2-vector: |action[i]| sets CPG amplitude of the three legs on one side,
+  the sign sets their direction. Leg movements come from CPGs and preprogrammed steps,
+  not from the brain model. [SIMPLIFICATION]
+- Displacement over 1.5 s (units not verified, seed 0, one run each): action [1, 1]:
+  (21.1, 3.9, -0.1); action [1, 0.2]: (-2.6, -4.1, 0.0). Heading was not measured, so
+  turning is not yet demonstrated.
