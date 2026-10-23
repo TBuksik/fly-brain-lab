@@ -95,3 +95,16 @@ Measured with `scripts/measure_turning_curve.py` (HybridTurningController, seed 
 - x = 0 behaves differently and asymmetrically (regime change, cause unknown);
   keep actions within [0.2, 1.0].
 - This characterises the simulated body only; it is not biological data.
+
+### Body action convention (verified in FlyGym source, 2026-10-23)
+
+- Leg order (flygym/examples/locomotion/steps.py): LF, LM, LH, RF, RM, RH.
+- HybridTurningController.step: a[0] sets CPG amplitude of the first three legs
+  (left side), a[1] of the last three (right side). Sign of a[i] flips the stepping
+  direction of that side (freqs *= -1 when a[i] <= 0).
+- Measured (heading convention of obs["fly_orientation"], xy plane): weakening a[0]
+  gives positive turn, weakening a[1] negative turn. World-axis handedness not checked.
+- Keep brain-driven actions within [0.2, 1.0]; a == 0 flips direction (regime change).
+- Each step calls get_observation twice (post_step and the controller's own call, which
+  feeds the retraction/stumbling rules). Removing the second call would save at most ~17%
+  of body time; deferred.
