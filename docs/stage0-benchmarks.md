@@ -21,9 +21,17 @@ Spikes 17,009 vs 16,776; active neurons 389 vs 411 (Jaccard 0.896);
 rate correlation 0.995. Single trial each, independent Poisson noise.
 
 ## MN9 (feeding motor neuron)
-Left MN9 (720575940660219265) fires in both backends (94 vs 96 spikes, first spike
-30.2 vs 27.0 ms). Right MN9 (720575940645521262) is silent in both. Not yet
-explained; to be checked against Shiu et al.
+Two MN9 neurons exist in the 783 model (FlyWire annotations v783, cell_type CB0701,
+nerve PhN). Both fire in both backends (1 s, 'sugar', one trial each):
+- 720575940660219265 (annotation side=right): 94 spikes (PyTorch) vs 96 (Brian2 CPU),
+  first spike 30.2 vs 27.0 ms.
+- 720575940618238523 (annotation side=left): 59 (PyTorch) vs 61 (Brian2 CPU).
+Correction (2026-10-23): earlier versions of this note called 720575940645521262 the
+right MN9 and reported it silent. That ID comes from FlyWire release 630 (copied from
+Eon's figures.ipynb), is absent from the 783 model, and has no rows in the results.
+The "silence" was a labelling error, not a biological or implementation effect.
+Side labels here follow the annotation table; Eon's left/right names are inconsistent
+with it. Rates still not compared with Shiu et al.
 
 ## Reference numbers from the Eon benchmark CSV (hardware not recorded)
 Median sim time for 1 s: GeNN 0.54 s, NEST GPU 1.07 s, Brian2GeNN 1.91 s,
