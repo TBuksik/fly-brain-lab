@@ -19,3 +19,16 @@ and per-neuron parameters were unchecked.
 - Validation scope of Shiu et al. 2024 (Nature, doi:10.1038/s41586-024-07763-9): feeding initiation
   (sugar/water GRNs -> MN9) and antennal grooming (Johnston's organ). Olfaction was not among the
   validated circuits. Companion work: Sapkal et al. 2024 (halting in locomotion), not yet read.
+
+## Sign assignment in the connectivity file (2025_Connectivity_783.parquet)
+
+- Excitatory is +1/-1, one value per presynaptic neuron (no neuron has both). Synapses: ~32.49M
+  excitatory (59.6%), ~22.00M inhibitory (40.4%), 54.49M total.
+- By annotated top_nt (neurons +1 / -1; synapses +1 / -1): acetylcholine 84 162 / 1719 (30.19M / 0.27M);
+  GABA 1348 / 17 731 (0.14M / 12.46M); glutamate 2941 / 21 863 (0.21M / 9.27M);
+  dopamine 5897 / 3 (1.38M / ~0); serotonin 2127 / 9 (0.44M / ~0); octopamine 192 / 1 (0.14M / ~0).
+- Neuromodulator-labelled neurons act as ordinary excitatory synapses (~3.6% of all synapses).
+  5900 neurons carry top_nt = dopamine, vs 331 in cell_class DAN: top_nt is a classifier prediction
+  applied to many other cell types; what those neurons are has not been checked.
+- ~6000 neurons have a sign that disagrees with their top_nt label (ACh -1, GABA +1, glutamate +1);
+  origin not checked.
