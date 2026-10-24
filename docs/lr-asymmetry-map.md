@@ -35,3 +35,24 @@ written to /tmp). [SIMPLIFICATION: uniform LIF parameters, one global weight.]
   (63% ipsilateral); ALLN 33 195 left / 49 177 right (40% ipsilateral). Right ORNs mirror this
   (ALPN 58% ipsilateral, ALLN 35%). So the "one-sided" stimulus is substantially bilateral at the
   first synapse; transmitter sign of the ALLN targets in the model not checked.
+
+## Where lateralisation is lost (scripts/lateralisation_by_class.py, on the per-type table)
+
+lat_index = ((ll - lr) - (rl - rr)) / (ll + lr + rl + rr), columns <stimulated side>_<neuron side>.
+
+- By class: olfactory 0.712 (contra/ipsi 0.168), ALPN 0.005, ALLN 0.005, Kenyon cells 0.003,
+  LHLN 0.002, DAN 0.001, MBON 0.001. Lateralisation is gone at the first relay.
+- ALPN activity depends on the neuron's side, not on the stimulated side: DA1_lPN left neurons
+  556 (left stim) vs 551 (right stim), right neurons 468 vs 478, while left ORN_DA1 neurons fire
+  932 vs 61 in the same two conditions. DA1 projection neurons ignore a ~15-fold change in
+  their cognate receptor input. Consistent with the earlier finding that total network activity
+  barely depends on input strength (switch-like global state). [SIMPLIFICATION: uniform LIF
+  parameters, one global weight.]
+- Left-right bias is mixed in sign across types (DA1_lPN, D_adPN, VC5_lvPN left-heavy;
+  DL2d_adPN, M_lPNm11D, lLN1_bc right-heavy), not a global left bias.
+- ORN types differ: ORN_DA1/VA1d/VA1v contra/ipsi 0.02-0.04; ORN_VM6v 0.86, ORN_D 0.80
+  (not lateralised even at receptor level; cause unknown).
+- Annotation top_nt: ALLN glutamate 148, GABA 147, ACh 80, serotonin 40, dopamine 12, octopamine 2;
+  ALPN ACh 474, GABA 203, glutamate 8. The sign used by the model comes from the `Excitatory`
+  column of the connectivity file; not checked per class.
+- Open: dense input (all ~2250 ORNs) may saturate; sparse single-glomerulus test pending.
