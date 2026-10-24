@@ -24,3 +24,14 @@ written to /tmp). [SIMPLIFICATION: uniform LIF parameters, one global weight.]
 - Kenyon cell activity in the model (~90k spikes / 0.5 s) may be far denser than the sparse
   odour code reported in vivo (general literature knowledge, not checked in this project);
   relevant for stage 4 (mushroom body plasticity).
+
+## Structural checks (scripts/check_lr_structure.py, no simulation)
+
+- Kenyon cells in the v783 model: 2580 left vs 2597 right (KCg-m 1069 / 1120, KCab 844 / 799).
+  Counts do not explain the left-heavy KC activity (KCg-m ~29 vs ~20 spikes per cell per trial,
+  averaged over all cells of the type). Hypothesis "different KC counts" rejected.
+- Output synapses of ORNs by target side: left ORNs 52.4% left / 47.5% right targets,
+  right ORNs 51.8% / 48.1%. By target class (synapses, left ORNs): ALPN 51 752 left / 31 007 right
+  (63% ipsilateral); ALLN 33 195 left / 49 177 right (40% ipsilateral). Right ORNs mirror this
+  (ALPN 58% ipsilateral, ALLN 35%). So the "one-sided" stimulus is substantially bilateral at the
+  first synapse; transmitter sign of the ALLN targets in the model not checked.
