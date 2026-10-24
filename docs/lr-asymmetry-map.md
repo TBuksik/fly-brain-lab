@@ -76,12 +76,12 @@ Data: docs/glomerulus-lateral-ORN_DA1.csv. [SIMPLIFICATION: uniform LIF paramete
 ## Dose-response, one glomerulus (ORN_DA1 one side; 3 trials per point; 0.5 s)
 
 Data: docs/glomerulus-lateral-ORN_DA1-rate{5,10,20,50}.csv. [SIMPLIFICATION: uniform LIF
-parameters, one global weight.] Per-trial ignition below is INFERRED FROM MEANS and still to be
-confirmed from per-trial values.
+parameters, one global weight.] Per-trial totals were checked (see below).
 
 - 5 Hz one side: only the receptors fire (~145-152 spikes); ALPN, DNs, rest of brain silent.
-- 10 Hz left: means match 2 of 3 trials igniting the full cascade; 10 Hz right: 0 of 3.
-  5 Hz both sides: means match 1 of 3. From 20 Hz all trials ignite.
+- Per-trial total spikes: 10 Hz left 51k / 159k / 198k; 10 Hz right 322 / 332 / 297 (no ignition);
+  5 Hz both sides 351 / 44k / 183k. Ignition has a random delay, so the total in the 0.5 s window
+  depends on onset time (not all-or-none per window). From 20 Hz every trial ignites.
 - Ignited state: ~200-230k spikes, ~8300 active neurons, total rising only 218k (20 Hz) ->
   225k (50 Hz) -> 229k (100 Hz). DNa02_L 22-29 spikes, DNa02_R 0-0.7, DNa01_L 9-12, DNa01_R 2-4.
   DNs silent when not ignited.
@@ -90,3 +90,22 @@ confirmed from per-trial values.
 - Observed regimes: silent or global cascade; no graded regime seen. DN output encodes ignition
   only, not stimulus side or strength. A brain-body rule turn ~ rate(R) - rate(L) driven by
   olfactory input would give no turn or a fixed turn.
+
+## Cascade time course (scripts/cascade_timecourse.py; ORN_DA1 left, 20 Hz, 0.5 s on + 0.5 s off, 1 trial)
+
+[SIMPLIFICATION: uniform LIF parameters, one global weight.]
+
+- Ignition within ~50 ms: 4122 spikes in 0-50 ms, then ~23.5-24.1k spikes per 50 ms with
+  ~7.5-7.6k distinct neurons (~60 Hz per active neuron, derived).
+- Self-sustaining: 218 556 spikes during input, 238 653 in the next 0.5 s with input off; per-bin
+  spikes flat until the end of the run. (The 'sugar' circuit, 21 neurons, falls to zero when the
+  stimulus is switched off.)
+- Median first-spike time by class: ALLN 40.5 ms (360/429 active), LHCENT 42.7, ALPN 43.0 (554/685),
+  LHLN 45.1, MBON 55.4, Kenyon 56.5 (3361/5177 active, 65%), central/unclassified 56.9 (2578/21959),
+  descending 61.2 (159/1297), olfactory sensory 68.3 (401/2279 active; only 60 driven directly).
+  Antennal-lobe and lateral-horn neurons fire first, before the mushroom body.
+- [HYPOTHESIS] runaway recurrent excitation of the uniform-weight LIF model (adaptation and
+  per-neuron parameters not checked in the code); an in vivo fly does not enter a persistent
+  state of ~7600 active neurons after a brief odour (general knowledge, not verified here).
+- Consequence: with this model olfactory input cannot carry side or strength to the DNs; any
+  parameter change that restores a graded regime is a tuning choice and must be labelled so.
