@@ -72,3 +72,21 @@ Data: docs/glomerulus-lateral-ORN_DA1.csv. [SIMPLIFICATION: uniform LIF paramete
 - [HYPOTHESES] cascade runs mainly through the mushroom body (dense Kenyon cell activity vs
   sparse in vivo, general literature knowledge not checked here); uniform-parameter artefact;
   Shiu et al. validation may not cover olfaction (to check in the paper).
+
+## Dose-response, one glomerulus (ORN_DA1 one side; 3 trials per point; 0.5 s)
+
+Data: docs/glomerulus-lateral-ORN_DA1-rate{5,10,20,50}.csv. [SIMPLIFICATION: uniform LIF
+parameters, one global weight.] Per-trial ignition below is INFERRED FROM MEANS and still to be
+confirmed from per-trial values.
+
+- 5 Hz one side: only the receptors fire (~145-152 spikes); ALPN, DNs, rest of brain silent.
+- 10 Hz left: means match 2 of 3 trials igniting the full cascade; 10 Hz right: 0 of 3.
+  5 Hz both sides: means match 1 of 3. From 20 Hz all trials ignite.
+- Ignited state: ~200-230k spikes, ~8300 active neurons, total rising only 218k (20 Hz) ->
+  225k (50 Hz) -> 229k (100 Hz). DNa02_L 22-29 spikes, DNa02_R 0-0.7, DNa01_L 9-12, DNa01_R 2-4.
+  DNs silent when not ignited.
+- Ipsilateral effect in the ALPN readout after ignition: (L-R | left stim) - (L-R | right stim)
+  ~25 spikes at 20 and 50 Hz, ~37 at 100 Hz; independent of input strength.
+- Observed regimes: silent or global cascade; no graded regime seen. DN output encodes ignition
+  only, not stimulus side or strength. A brain-body rule turn ~ rate(R) - rate(L) driven by
+  olfactory input would give no turn or a fixed turn.
