@@ -56,3 +56,19 @@ lat_index = ((ll - lr) - (rl - rr)) / (ll + lr + rl + rr), columns <stimulated s
   ALPN ACh 474, GABA 203, glutamate 8. The sign used by the model comes from the `Excitatory`
   column of the connectivity file; not checked per class.
 - Open: dense input (all ~2250 ORNs) may saturate; sparse single-glomerulus test pending.
+
+## Sparse input: one glomerulus (scripts/measure_glomerulus_lateral.py, 100 Hz, 0.5 s, 5 trials)
+
+Drive ORN_DA1 on one side only (60 left / 66 right neurons); readout DA1_lPN + DA1_vPN (9 left / 8 right).
+Data: docs/glomerulus-lateral-ORN_DA1.csv. [SIMPLIFICATION: uniform LIF parameters, one global weight.]
+
+- Stimulus is lateralised at the receptors (stimulated side ~2960 spikes, other side ~15-64).
+- Readout L-R: +99 spikes (left stim) vs +62 (right stim), SD 1-7: small ipsilateral effect
+  (~1.5% of readout activity), real but weak. Earlier "ALPN ignore the input" was too strong.
+- 60 receptors give ~229k spikes and ~8300 active neurons (2250 receptors: ~257k / ~9400;
+  'sugar' with 21 neurons: ~17k / ~400). Strongly saturating cascade, nearly input-independent.
+- Steering DNs: DNa02_L 24-27 spikes, DNa02_R 0.2-0.6, DNa01_L ~9-11, DNa01_R ~3-4 in every
+  stimulated condition, independent of stimulus side: DN output reflects the global state.
+- [HYPOTHESES] cascade runs mainly through the mushroom body (dense Kenyon cell activity vs
+  sparse in vivo, general literature knowledge not checked here); uniform-parameter artefact;
+  Shiu et al. validation may not cover olfaction (to check in the paper).
