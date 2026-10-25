@@ -1,0 +1,18 @@
+# Brain -> body mapping (prototype, version 1).
+# Every entry below is an explicit [SIMPLIFICATION] / tuning choice unless marked [DATA].
+version: 1
+brain:
+  readout: DNa02                  # [DATA] steering neurons, Rayshubskiy et al. 2025 (docs/descending-neurons.md)
+  ids:
+    DNa02_L: 720575940629327659   # side per FlyWire v783 annotation
+    DNa02_R: 720575940604737708
+  window_ms: 15                   # one brain window = 150 physics steps of 0.1 ms
+  smoothing_tau_ms: 45            # exponential smoothing of per-window spike counts (~3 windows)
+body:
+  action_index: {left: 0, right: 1}   # [DATA] a[0] = left legs LF/LM/LH, a[1] = right legs (FlyGym source)
+  action_range: [0.2, 1.0]            # [DATA] a == 0 flips stepping direction; keep within [0.2, 1.0]
+mapping:
+  # a_side = clip(1 - gain_side * smoothed_DN_spikes_per_window_of_that_side, action_range)
+  # ipsilateral DN activity weakens ipsilateral stepping (turn towards that side) [SIMPLIFICATION]
+  gain_left: 0.47                 # 1.7 spikes/window -> amplitude 0.2
+  gain_right: 0.47                # no compensation yet for the left-heavy bias (docs/lr-grid-LC10.md)
