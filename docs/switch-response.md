@@ -18,3 +18,27 @@ data: docs/switch-response-LC10.csv. Our simplified model [SIMPLIFICATION], not 
   smoothing over several windows is required (a design choice [SIMPLIFICATION]).
 - The Brian2 warning about variable 'w' came from the loop variable of the script (renamed k_win);
   results unaffected.
+
+## Offline analysis (scripts/analyze_switch_response.py, no new simulation)
+
+Sign of summed DNa02 (R-L) over k windows vs the truly stronger-driven side (protocol 30 vs 10 Hz,
+2 windows skipped after each switch; blocks: L 108/54/36/24/18/12, R 54/27/18/12/9/6 for k = 1/2/3/4/6/8):
+
+| k (ms) | stronger L: correct / tie | stronger R: correct / tie |
+|--------|---------------------------|---------------------------|
+| 1 (15) | 0.98 / 0.02 | 0.63 / 0.37 |
+| 2 (30) | 1.00 / 0.00 | 0.89 / 0.11 |
+| 3 (45) | 1.00 / 0.00 | 0.94 / 0.06 |
+| 4 (60) | 1.00 / 0.00 | 0.92 / 0.08 |
+| 6 (90) | 1.00 / 0.00 | 1.00 / 0.00 |
+| 8 (120)| 1.00 / 0.00 | 1.00 / 0.00 |
+
+- Wrong direction: never; errors are ties (the losing DN is silent), i.e. "no turn".
+- Mean summed R-L per window: -1.69 (L stronger) / +0.78 (R stronger); grows linearly with k.
+- With 6-9 blocks, 100% only bounds the true rate to >~0.6-0.7 (95%, rule of three); blocks from the
+  same trial are not independent; one contrast only (3:1).
+- Latencies per trial: from silence first DNa02_L spike in the first window (< 15 ms) in 3/3 trials;
+  after input off both DNa02 silent from +15 ms in 3/3. Switch L->R: old winner silent from +0/+15 ms,
+  new winner first spike at +30/+30/+60 ms; switch R->L: new winner +15 ms in 3/3. Direction
+  asymmetry consistent across 3 trials, cause not established.
+- Minimum path LC10 -> DNa02 is 2 hops (1-hop path sums were zero), >= 3.6 ms of synaptic delay.
