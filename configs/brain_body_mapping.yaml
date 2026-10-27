@@ -16,3 +16,21 @@ mapping:
   # ipsilateral DN activity weakens ipsilateral stepping (turn towards that side) [SIMPLIFICATION]
   gain_left: 0.47                 # 1.7 spikes/window -> amplitude 0.2
   gain_right: 0.47                # no compensation yet for the left-heavy bias (docs/lr-grid-LC10.md)
+vision:
+  # [SIMPLIFICATION] retina, optic lobe and colour are skipped. The bearing error theta of one fixed object
+  # drives the LC10 of the side towards which the body must turn: theta > 0 (positive heading change,
+  # produced empirically by weakening a[0]) -> left LC10; theta < 0 -> right LC10.
+  driven_cell_type_prefix: LC10
+  max_rate_hz: 30
+  saturation_deg: 60
+  object_distance: 30          # FlyGym length units (not verified to be mm)
+  initial_bearings_deg: [60, -60]
+vision:
+  # [SIMPLIFICATION] retina, optic lobe and colour are skipped. The bearing error theta of one fixed object
+  # drives the LC10 of the side towards which the body must turn: theta > 0 (positive heading change,
+  # produced empirically by weakening a[0]) -> left LC10; theta < 0 -> right LC10.
+  driven_cell_type_prefix: LC10
+  max_rate_hz: 30
+  saturation_deg: 60
+  object_distance: 30          # FlyGym length units (not verified to be mm)
+  initial_bearings_deg: [60, -60]
