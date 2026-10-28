@@ -35,3 +35,27 @@ below 20 deg).
   approach), so it is not comparable with the settled errors of v1.
 - Whether -90 and +135 arrive with a longer limit was not tested. n = 1 per bearing.
 - Wall time 43-71 s per episode, 0.51-0.58 s per window (~0.026-0.029x real time; one net.run() per window).
+
+## Offline analysis (scripts/summarize_closed_loop.py, no simulation)
+
+Correction: "-135 is a real failure, distance barely changed" (earlier note) was wrong. theta shrinks
+monotonically (-137 deg at 150 ms -> -29 deg at 1950 ms, no wrap-around); distance grows to 24.1 (900 ms) and
+falls to 16.8 (1950 ms). "Not arrived in 2 s" is a time-limit effect; arrival estimated at ~3 s (11-13 units/s
+closing speed, theta staying small). -90 behaves alike (theta -25 deg, distance 4.8 at the last sample).
+
+- Turn rate from 150 ms theta differences (error ~+-20 deg/s): left turns ~110-140 deg/s, right turns
+  ~50-100 deg/s with stalls (e.g. -135: -86 -> -84 deg in 150 ms); ratio ~0.5.
+- Convergence time (5 consecutive windows with abs(theta) < 20): +25 105 ms, +50 360, +90 630, +135 1110;
+  none for negative bearings, a threshold artefact (settled error -16..-23 deg for -25 straddles 20 deg).
+- Approach-phase error (distance 5-12, n = 31-42): +25/+50/+90/+135: +4.3/+8.2/+1.4/+2.2 deg;
+  -25/-50/-90: -16.3/-31.5/-19.8 deg; SD 4.1-4.8 deg in all episodes (upper bound for the stepping-cycle yaw
+  wobble). -50 shows a plateau of -28..-36 deg between 600 and 1500 ms (cause unknown, n = 1).
+- Final theta at distance ~2 is meaningless (a lateral offset of 1 unit is ~30 deg); -50 ends at -71 deg.
+- Fraction of windows with a DNa02 spike: left 0.21/0.39/0.41/0.52, right 0.35/0.55/0.56/0.69 for
+  25/50/90/135 deg. In v1 at larger abs(theta) on the right the DNa02_R count per window was lower than
+  DNa02_L (0.9/1.2/0.6/0.5 vs 1.4/1.5/0.8/0.6 in the first four 150 ms bins). Consistent with the DN
+  asymmetry of docs/lr-grid-LC10.md; the stationary body curve is nearly symmetric (-75 vs +80 deg/s at
+  x = 0.6). [HYPOTHESIS] the weaker right turn comes from DNa02_R output, not from the body.
+- Closing speed (median distance decrease per second while abs(theta) < 30): 11.8-16.2 units/s; it
+  underestimates forward speed by up to 13% (cos 30) and rests on few windows for -135. Constant forward
+  speed (assumed earlier) is not supported.
