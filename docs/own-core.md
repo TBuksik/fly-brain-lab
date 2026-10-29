@@ -46,3 +46,16 @@ Brian2 version. Only the summary is stored (the spike train itself is derived fr
 for derived data was not checked). The own core reproduces it; the test took 5.3 s with a warm Cython cache
 (a cold run was not timed). It detects changes in the result of this one stimulus only; a Brian2 or RNG change
 can alter the hashes ("investigate", not necessarily a bug). Default `pytest` skips it (pytest.ini).
+
+## Loop scripts without reference code (2026-10-29)
+
+flybrain/data.py holds the data locations (env FLYBRAIN_DATA / FLYWIRE_ANN; files stay outside the repository)
+and the steering-DN IDs; LIFParams.poisson_kick = w_syn * f_poi (68.75 mV; unit test added). closed_loop_sweep.py and
+closed_loop_netop.py no longer import the reference repo (grep verified); the --core option was removed.
+Check: closed_loop_netop.py vs docs/closed-loop-sweep-g0.82.csv: +35 deg (92 windows) and -150 deg (162 windows),
+DN counts identical in all windows, actions within 1e-16, ~302 ms per window (body ~262 ms). pytest: 7 passed.
+
+Stage 1 status: data loader with consistency check, regression tests (unit + frozen full-network summary) and the
+loop on the own core are done. Not done: a swappable-engine interface (only Brian2 CPU exists; the PyTorch and GeNN
+backends are deferred). Older measurement scripts (measure_dn_lateral, scan_*, map_lr_asymmetry, ...) still import
+the reference code.

@@ -82,3 +82,7 @@ def test_load_connectome_rejects_duplicate_ids(tmp_path):
     comp, con = write_connectome(tmp_path, [11, 22, 22], 11, 22, 0, 1, 5)
     with pytest.raises(ValueError, match="duplicate"):
         load_connectome(comp, con)
+
+
+def test_poisson_kick_is_68_75_mV():
+    assert LIFParams().poisson_kick / mV == pytest.approx(68.75)

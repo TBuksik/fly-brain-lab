@@ -17,12 +17,13 @@ import yaml
 from flygym import Fly
 from flygym.examples.locomotion import HybridTurningController
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-from measure_dn_lateral import ANN, DN_IDS  # noqa: E402  (also sets up brian2 / Eon imports)
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from brian2 import Hz, Network, PoissonGroup, Synapses, ms, prefs, seed  # noqa: E402
 
-from brian2 import Hz, Network, PoissonGroup, Synapses, ms, seed  # noqa: E402
-from benchmark import path_comp, path_con  # noqa: E402
-from run_brian2_cuda import create_network, default_params  # noqa: E402
+prefs.codegen.target = "cython"
+
+from flybrain.data import ANN, DN_IDS, PATH_COMP, PATH_CON  # noqa: E402
+from flybrain.model import LIFParams, build_network, load_connectome  # noqa: E402
 
 
 def wrap_deg(x):
@@ -35,17 +36,11 @@ def pose(obs):
     return pos, float(np.arctan2(o[1], o[0]))
 
 
-def build_brain(prefix, core="eon"):
-    params = dict(default_params)
-    if core == "own":
-        sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-        from flybrain.model import build_network, load_connectome
-        con = load_connectome(path_comp, path_con)
-        parts = build_network(con)
-        neu, syn, spk_mon, root_ids = parts.neurons, parts.synapses, parts.monitor, con.root_ids
-    else:
-        neu, syn, spk_mon, df_comp, _ = create_network(path_comp, path_con, params, record_spikes=True)
-        root_ids = df_comp.index.to_numpy()
+def build_brain(prefix):
+    params = LIFParams()
+    con = load_connectome(PATH_COMP, PATH_CON)
+    parts = build_network(con, params)
+    neu, syn, spk_mon, root_ids = parts.neurons, parts.synapses, parts.monitor, con.root_ids
     i_of = {int(fid): i for i, fid in enumerate(root_ids)}
     ann = pd.read_csv(ANN, sep="\t", low_memory=False)[["root_id", "cell_type", "side"]]
     ann["root_id"] = ann["root_id"].astype("int64")
@@ -60,7 +55,7 @@ def build_brain(prefix, core="eon"):
     all_idx = np.concatenate([left, right])
     is_left = np.arange(len(all_idx)) < len(left)
     pg = PoissonGroup(len(all_idx), rates=0 * Hz)
-    w_in = params["w_syn"] * params["f_poi"]
+    w_in = params.poisson_kick
     pg_syn = Synapses(pg, neu, on_pre="v += w_in", namespace={"w_in": w_in})
     pg_syn.connect(i=np.arange(len(all_idx)), j=all_idx)
     for i in all_idx:

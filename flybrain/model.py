@@ -30,6 +30,11 @@ class LIFParams:
     w_syn: float = 275.0
     f_poi: int = 250          # a Poisson input spike adds w_syn * f_poi to v
 
+    @property
+    def poisson_kick(self):
+        """Voltage added to v by one Poisson input spike: w_syn * f_poi (68.75 mV)."""
+        return (self.w_syn * uvolt) * self.f_poi
+
 
 @dataclass
 class Connectome:
