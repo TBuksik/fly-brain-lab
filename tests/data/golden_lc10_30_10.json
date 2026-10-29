@@ -1,0 +1,11 @@
+{
+  "stimulus": "LC10 left 30 Hz / right 10 Hz for 0.3 s, then 0.2 s without input; brain seed 1; Poisson input adds 68.75 mV per spike, rfc = 0 for driven neurons (scripts/check_own_core.py)",
+  "source": "reference implementation (spike file written by scripts/check_own_core.py --impl eon)",
+  "brian2_version": "2.9.0",
+  "summary": {
+    "n_spikes": 7322,
+    "n_active": 1122,
+    "sha256_indices": "43816d1e7dd549ac1ecd4c331f03ed8564d47728d46925cc4331dcfe0f998455",
+    "sha256_time_steps": "15af9410b90de6cd92af426b57e44b63facc2b4b75b81c7925ccad4fce3a0210"
+  }
+}

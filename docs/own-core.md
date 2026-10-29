@@ -36,3 +36,13 @@ tolerances were fixed before the first run. 100 synapses: peak v - v_0 = 4.33 +-
 spike of neuron 1; 200 synapses: one spike of neuron 1 between 5.5 and 7.0 ms; -200 synapses: minimum
 -8.66 +- 0.15 mV, no spike. load_connectome accepts consistent files and raises ValueError for an index mismatch
 and for duplicate IDs. 6 passed. The Cython target is not covered by these tests (the full-network comparisons use it).
+
+## Slow regression test (tests/test_core_full.py; pytest -m slow)
+
+tests/data/golden_lc10_30_10.json freezes a summary of the reference implementation's spike train for the
+stimulus of scripts/check_own_core.py (LC10 left 30 Hz / right 10 Hz for 0.3 s, 0.2 s silence, brain seed 1):
+7322 spikes, 1122 active neurons, SHA-256 of the neuron indices and of the spike times in 0.1 ms steps, plus the
+Brian2 version. Only the summary is stored (the spike train itself is derived from the connectome and its licence
+for derived data was not checked). The own core reproduces it; the test took 5.3 s with a warm Cython cache
+(a cold run was not timed). It detects changes in the result of this one stimulus only; a Brian2 or RNG change
+can alter the hashes ("investigate", not necessarily a bug). Default `pytest` skips it (pytest.ini).
