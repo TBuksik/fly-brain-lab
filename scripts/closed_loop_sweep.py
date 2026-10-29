@@ -154,10 +154,15 @@ def main():
     ap.add_argument("--metric-min-dist", type=float, default=5.0)
     ap.add_argument("--warmup", type=int, default=40)
     ap.add_argument("--seed", type=int, default=1)
+    ap.add_argument("--gain-right", type=float, default=None,
+                    help="override mapping.gain_right from the YAML (calibration, [SIMPLIFICATION])")
     ap.add_argument("--out", default="docs/closed-loop-sweep.csv")
     args = ap.parse_args()
 
     cfg = yaml.safe_load(open(args.config))
+    if args.gain_right is not None:
+        cfg["mapping"]["gain_right"] = args.gain_right
+    print(f"gain_left {cfg['mapping']['gain_left']}, gain_right {cfg['mapping']['gain_right']}", flush=True)
     max_windows = int(round(args.seconds * 1000.0 / cfg["brain"]["window_ms"]))
     brain = build_brain(cfg["vision"]["driven_cell_type_prefix"])
     sim = build_body()

@@ -15,7 +15,9 @@ mapping:
   # a_side = clip(1 - gain_side * smoothed_DN_spikes_per_window_of_that_side, action_range)
   # ipsilateral DN activity weakens ipsilateral stepping (turn towards that side) [SIMPLIFICATION]
   gain_left: 0.47                 # 1.7 spikes/window -> amplitude 0.2
-  gain_right: 0.47                # no compensation yet for the left-heavy bias (docs/lr-grid-LC10.md)
+  gain_right: 0.82                # CALIBRATION [SIMPLIFICATION]: 0.47 / 0.57, where 0.57 = DNa02_R/DNa02_L response at 30 Hz
+                                  # (docs/lr-grid-LC10.md); the ratio is rate dependent (0.35 at 10 Hz, 0.88 at 100 Hz)
+                                  # so a single constant only halves the right-hand error (docs/closed-loop-calibration.md)
 vision:
   # [SIMPLIFICATION] retina, optic lobe and colour are skipped. The bearing error theta of one fixed object
   # drives the LC10 of the side towards which the body must turn: theta > 0 (positive heading change,
