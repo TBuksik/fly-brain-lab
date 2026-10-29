@@ -35,10 +35,18 @@ def pose(obs):
     return pos, float(np.arctan2(o[1], o[0]))
 
 
-def build_brain(prefix):
+def build_brain(prefix, core="eon"):
     params = dict(default_params)
-    neu, syn, spk_mon, df_comp, _ = create_network(path_comp, path_con, params, record_spikes=True)
-    i_of = {fid: i for i, fid in enumerate(df_comp.index)}
+    if core == "own":
+        sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+        from flybrain.model import build_network, load_connectome
+        con = load_connectome(path_comp, path_con)
+        parts = build_network(con)
+        neu, syn, spk_mon, root_ids = parts.neurons, parts.synapses, parts.monitor, con.root_ids
+    else:
+        neu, syn, spk_mon, df_comp, _ = create_network(path_comp, path_con, params, record_spikes=True)
+        root_ids = df_comp.index.to_numpy()
+    i_of = {int(fid): i for i, fid in enumerate(root_ids)}
     ann = pd.read_csv(ANN, sep="\t", low_memory=False)[["root_id", "cell_type", "side"]]
     ann["root_id"] = ann["root_id"].astype("int64")
     ann = ann[ann["root_id"].isin(i_of.keys())]

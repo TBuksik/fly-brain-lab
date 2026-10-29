@@ -34,6 +34,7 @@ def main():
     ap.add_argument("--warmup", type=int, default=40)
     ap.add_argument("--seed", type=int, default=1)
     ap.add_argument("--reference", default="docs/closed-loop-sweep-g0.82.csv")
+    ap.add_argument("--core", choices=["eon", "own"], default="eon")
     args = ap.parse_args()
 
     cfg = yaml.safe_load(open(args.config))
@@ -44,7 +45,8 @@ def main():
     max_windows = int(round(args.seconds * 1000.0 / win))
     print(f"gain_left {bmap['gain_left']}, gain_right {bmap['gain_right']}", flush=True)
 
-    brain = build_brain(vis["driven_cell_type_prefix"])
+    brain = build_brain(vis["driven_cell_type_prefix"], core=args.core)
+    print(f"network core: {args.core}", flush=True)
     sim = build_body()
     steps = max(1, round(win / 1000 / sim.timestep))
     net, pg, mon, is_left = brain["net"], brain["pg"], brain["mon"], brain["is_left"]
