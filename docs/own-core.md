@@ -28,3 +28,11 @@ Same check as docs/closed-loop-netop.md, with flybrain.model instead of the refe
 - Remaining dependency on the reference repo: scripts still import `benchmark` (data paths) and
   `run_brian2_cuda` (default_params: w_syn, f_poi for the Poisson input weight) at module level, so the
   closed-loop scripts still need ~/refs/eon-fly-brain/code on the path. Only the network construction moved.
+
+## Unit tests (tests/test_core_small.py; pytest, no FlyWire data, numpy target, ~1 s)
+
+Two-neuron networks with analytic expectations (t_mbr = 20 ms, tau = 5 ms, delay 1.8 ms, w_syn = 275 uV);
+tolerances were fixed before the first run. 100 synapses: peak v - v_0 = 4.33 +- 0.1 mV at 11.04 +- 0.3 ms, no
+spike of neuron 1; 200 synapses: one spike of neuron 1 between 5.5 and 7.0 ms; -200 synapses: minimum
+-8.66 +- 0.15 mV, no spike. load_connectome accepts consistent files and raises ValueError for an index mismatch
+and for duplicate IDs. 6 passed. The Cython target is not covered by these tests (the full-network comparisons use it).
